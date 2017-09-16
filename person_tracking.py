@@ -76,11 +76,11 @@ while True:
 		cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 		roi_gray = gray[y:y+h, x:x+w]
 		roi_color = frame[y:y+h, x:x+w]
-		#people = face_cascade.detectMultiScale(roi_gray)
+		people = face_cascade.detectMultiScale(roi_gray)
 		text = "Occupied"
-		#for (ex,ey,ew,eh) in people:
-		#	#print ex
-		#	cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(255,0,0),2)
+		for (ex,ey,ew,eh) in people:
+			#print ex
+			cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(255,0,0),2)
 
 # draw the text and timestamp on the frame
 	cv2.putText(frame, "Room Status: {}".format(text), (10, 20),
@@ -88,19 +88,12 @@ while True:
 	cv2.putText(frame, datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S%p"),
 		(10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
 	
-
 	pts1 =	np.float32([(170,56),(284,87),(169,173),(286,183)])
 	pts2 = np.float32([(0,337),(0,291),(0,337),(0,291)])  
 	# show the frame and record if the user presses a key
-	M = cv2.getPerspectiveTransform(pts1,pts2)
-	#print M.shape
-	dst = cv2.warpPerspective(frame, M, (375,500))
-	#plt.imshow(frame,"gray"),plt.title('webcam feed')
-	#plt.show()
+	hostage = frame[0:200, 0:300]
 	cv2.imshow("webcam feed", frame)
-	cv2.imshow("webcam feed top view", dst)
-
-
+	cv2.imshow("webcam feed hostage view", hostage)
 	cv2.imshow("Thresh", thresh)
 	cv2.imshow("Frame Delta", frameDelta)
 	key = cv2.waitKey(1) & 0xFF
