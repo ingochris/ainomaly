@@ -13,7 +13,7 @@ ap.add_argument("-a", "--min-area", type=int, default=500, help="minimum area si
 args = vars(ap.parse_args())
 
 person_cascade = cv2.CascadeClassifier('haarcascade_fullbody.xml')
-face_cascade = cv2.CascadeClassifier('haarcascade_face.xml')
+# face_cascade = cv2.CascadeClassifier('haarcascade_face.xml')
 # if the video argument is None, then we are reading from webcam
 if args.get("video", None) is None:
 	camera = cv2.VideoCapture(0)
@@ -31,6 +31,8 @@ while True:
 	# grab the current frame and initialize the occupied/unoccupied
 	# text
 	(grabbed, frame) = camera.read()
+	# modify camera view
+	# frame = frame[0:500, 0:500]
 	text = "Unoccupied"
  
 	# if the frame could not be grabbed, then we have reached the end
@@ -79,7 +81,7 @@ while True:
 		cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 		roi_gray = gray[y:y+h, x:x+w]
 		roi_color = frame[y:y+h, x:x+w]
-		people = face_cascade.detectMultiScale(roi_gray)
+		people = person_cascade.detectMultiScale(roi_gray)
 		text = "Occupied"
 		for (ex,ey,ew,eh) in people:
 			#print ex
@@ -94,9 +96,9 @@ while True:
 	pts1 =	np.float32([(170,56),(284,87),(169,173),(286,183)])
 	pts2 = np.float32([(0,337),(0,291),(0,337),(0,291)])  
 	# show the frame and record if the user presses a key
-	hostage = frame[0:200, 0:300]
+	# hostage = frame[0:200, 0:300]
 	cv2.imshow("webcam feed", frame)
-	cv2.imshow("webcam feed hostage view", hostage)
+	# cv2.imshow("webcam feed hostage view", hostage)
 	cv2.imshow("Thresh", thresh)
 	cv2.imshow("Frame Delta", frameDelta)
 	key = cv2.waitKey(1) & 0xFF
