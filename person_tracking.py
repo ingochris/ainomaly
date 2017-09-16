@@ -22,16 +22,18 @@ if args.get("video", None) is None:
 # otherwise, we are reading from a video file
 else:
 	camera = cv2.VideoCapture(args["video"])
- 
 
 firstFrame = None
+
+xpoints = np.array([[]], np.int32)
+
+ypoints = np.array([[]], np.int32)
 
 # loop over the frames of the video
 while True:
 	# grab the current frame and initialize the occupied/unoccupied
 	# text
 	(grabbed, frame) = camera.read()
-	# modify camera view
 	# frame = frame[0:500, 0:500]
 	text = "Unoccupied"
  
@@ -42,7 +44,7 @@ while True:
  
 	# resize the frame, convert it to grayscale, and blur it
 	frame = cv2.resize(frame, (500,375))
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+	gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 	gray = cv2.GaussianBlur(gray, (7, 7), 0)
  	#print frame.shape
 	# if the first frame is None, initialize it
@@ -50,7 +52,7 @@ while True:
 		firstFrame = gray
 		continue
 
-# compute the absolute difference between the current frame and
+	# compute the absolute difference between the current frame and
 	# first frame
 	frameDelta = cv2.absdiff(firstFrame, gray)
 	thresh = cv2.threshold(frameDelta, 25, 255, cv2.THRESH_BINARY)[1]
@@ -63,17 +65,25 @@ while True:
 
 	# # (cnts, _) = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
 	# 	cv2.CHAIN_APPROX_SIMPLE)
- 
+
 	# loop over the contours
 	for c in cnts:
 
 		# if the contour is too small, ignore it
-		if cv2.contourArea(c) < 4000:
-			continue
+		# if cv2.contourArea(c) < 4000:
+		# 	continue
 
 		# compute the bounding box for the contour, draw it on the frame,
 		# and update the text
+
 		(x, y, w, h) = cv2.boundingRect(c)
+
+		xpoints = np.append(xpoints, x)
+		ypoints = np.append(ypoints, y)
+
+		# optionally trace the object
+		# for i in range(0,len(xpoints)):
+		# 	cv2.circle(frame, (xpoints[i], ypoints[i]), 1, (0, 255, 0), thickness=1, lineType=8, shift=0) 
 
 		cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 		roi_gray = gray[y:y+h, x:x+w]
@@ -81,10 +91,9 @@ while True:
 		people = person_cascade.detectMultiScale(roi_gray)
 		text = "Occupied"
 		for (ex,ey,ew,eh) in people:
-			#print ex
-			cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(255,0,0),2)
+			cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(255,255,255),2)
 
-# draw the text and timestamp on the frame
+	# draw the text and timestamp on the frame
 	cv2.putText(frame, "Room Status: {}".format(text), (10, 20),
 		cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 	cv2.putText(frame, datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S%p"),
@@ -98,12 +107,12 @@ while True:
 	# cv2.imshow("webcam feed hostage view", hostage)
 	cv2.imshow("Thresh", thresh)
 	cv2.imshow("Frame Delta", frameDelta)
+
 	key = cv2.waitKey(1) & 0xFF
  
 	# if the `q` key is pressed, break from the lop
-	if key == ord("q"):
+	if key == ord("p"):
 		break
- 
 # cleanup the camera and close any open windows
 camera.release()
 cv2.destroyAllWindows()
