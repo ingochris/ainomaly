@@ -42,10 +42,7 @@ while True:
  
 	# resize the frame, convert it to grayscale, and blur it
 	frame = cv2.resize(frame, (500,375))
-	#green = np.uint8([[0,255,0]])
-        #gray = cv2.cvtColor(green, cv2.COLOR_BGR2GRAY)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-	#gray = cv2.GaussianBlur(gray, (21, 21), 0)
 	gray = cv2.GaussianBlur(gray, (7, 7), 0)
  	#print frame.shape
 	# if the first frame is None, initialize it
