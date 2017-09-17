@@ -1,5 +1,10 @@
 # AINOMALY
-CANSOFCOM at Hack The North 2017
+Canadian Special Forces Command Incidence Response Automated Analysis by Artificial Intelligence at Hack the North 2017
+
+![Image of Yaktocat](https://raw.githubusercontent.com/ingochris/HTN2017/master/assets/screens/Screenshot%20at%202017-09-17%2005-57-59.png)
+
+Ainomaly introduces automation of surveillance footage analysis by harnessing the power of computer vision and machine learning. 
+Ainomaly is NOT a replacement for human controllers, but functions as a powerful tool to assist and augment this important task.
 
 ### BACKGROUND
  
