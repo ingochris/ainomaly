@@ -45,7 +45,7 @@ while True:
 	# resize the frame, convert it to grayscale, and blur it
 	frame = cv2.resize(frame, (500,375))
 	gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-	gray = cv2.GaussianBlur(gray, (7, 7), 0)
+	gray = cv2.GaussianBlur(gray, (29, 29), 0)
  	#print frame.shape
 	# if the first frame is None, initialize it
 	if firstFrame is None:
@@ -70,8 +70,8 @@ while True:
 	for c in cnts:
 
 		# if the contour is too small, ignore it
-		# if cv2.contourArea(c) < 4000:
-		# 	continue
+		if cv2.contourArea(c) < 600:
+	        	continue
 
 		# compute the bounding box for the contour, draw it on the frame,
 		# and update the text
