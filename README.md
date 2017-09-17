@@ -6,6 +6,8 @@ Canadian Special Forces Command Incidence Response Automated Analysis by Artific
 Ainomaly introduces automation of surveillance footage analysis by harnessing the power of computer vision and machine learning. 
 Ainomaly is NOT a replacement for human controllers, but functions as a powerful tool to assist and augment this important task.
 
+Really cool demo video: https://youtu.be/RNBxzSINypo
+
 ### BACKGROUND
  
 CANSOFCOM personnel are tasked and trained to conduct a wide range of dangerous missions on behalf of the Government of Canada.  One of these high risk missions is Hostage Rescue. 
