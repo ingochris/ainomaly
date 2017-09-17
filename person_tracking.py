@@ -21,8 +21,11 @@ if args.get("video", None) is None:
  
 # otherwise, we are reading from a video file
 else:
+#	time.sleep(0.10)
 	camera = cv2.VideoCapture(args["video"])
- 
+	
+	#print capmera.get(CV_CAP_PROP_FPS)
+	#cvSetCaptureProperty(camera,CV_CAP_PROP_FPS, 10)
 
 firstFrame = None
 
@@ -30,6 +33,8 @@ firstFrame = None
 while True:
 	# grab the current frame and initialize the occupied/unoccupied
 	# text
+	time.sleep(0.03)
+
 	(grabbed, frame) = camera.read()
 	# modify camera view
 	# frame = frame[0:500, 0:500]
@@ -42,7 +47,7 @@ while True:
  
 	# resize the frame, convert it to grayscale, and blur it
 	frame = cv2.resize(frame, (500,375))
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+	gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 	gray = cv2.GaussianBlur(gray, (7, 7), 0)
  	#print frame.shape
 	# if the first frame is None, initialize it
@@ -66,22 +71,24 @@ while True:
  
 	# loop over the contours
 	for c in cnts:
-
 		# if the contour is too small, ignore it
-		if cv2.contourArea(c) < 4000:
+		if cv2.contourArea(c) < 10:
 			continue
 
 		# compute the bounding box for the contour, draw it on the frame,
 		# and update the text
 		(x, y, w, h) = cv2.boundingRect(c)
 
-		cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+		# Checks for height and width ratio to detect people
+		if (w*8)/5 <= h:
+			cv2.rectangle(frame, (x, y), (x + w, y + h), (255,0, 0), 2)
+		else:
+			cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 		roi_gray = gray[y:y+h, x:x+w]
 		roi_color = frame[y:y+h, x:x+w]
 		people = person_cascade.detectMultiScale(roi_gray)
 		text = "Occupied"
 		for (ex,ey,ew,eh) in people:
-			#print ex
 			cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(255,0,0),2)
 
 # draw the text and timestamp on the frame
