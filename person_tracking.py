@@ -161,8 +161,8 @@ while True:
 
 	key = cv2.waitKey(1) & 0xFF
  
-	# if the `q` key is pressed, break from the lop
-	if key == ord("p"):
+	# if the `q` key is pressed, break from the loop
+	if key == ord("q"):
 		break
 # cleanup the camera and close any open windows
 userAsk = "none"
