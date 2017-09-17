@@ -1,4 +1,4 @@
-# HTN2017
+# AINOMALY
 CANSOFCOM at Hack The North 2017
 
 
