@@ -11,7 +11,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument("-v", "--video", help="path to the video file")
 ap.add_argument("-a", "--min-area", type=int, default=500, help="minimum area size")
 args = vars(ap.parse_args())
-pts = deque(maxlen=args["buffer"])
+#pts = deque(maxlen=args["buffer"])
 
 person_cascade = cv2.CascadeClassifier('haarcascade_fullbody.xml')
 # face_cascade = cv2.CascadeClassifier('haarcascade_face.xml')
@@ -52,12 +52,12 @@ while True:
 
 	# Limit based on number of objects
 	blurLimit = 0
-	if (numObjects>20):
-		blurLimit = 18;
-	elif (numObjects>14):
-		blurLimit = 14
-	else:
-		blurLimit = 0
+#	if (numObjects>20):
+#		blurLimit = 18
+#	elif (numObjects>14):
+#		blurLimit = 6
+#	else:
+#		blurLimit = 0
  
 	# resize the frame, convert it to grayscale, and blur it
 	frame = cv2.resize(frame, (500,375))
@@ -89,10 +89,10 @@ while True:
 	for c in cnts:
 		if (len(cnts)>20):
 			limit = 350
-		elif (len(cnts)>8):
-			limit = 100
+		elif (len(cnts)>16):
+			limit = 90
 		else:
-			limit = 20
+			limit = 15
 
 		# if the contour is too small, ignore it
 		if cv2.contourArea(c) < limit:
@@ -112,17 +112,23 @@ while True:
 			carCount += 1
 			cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
-		# xpoints = np.append(xpoints, x)
-		# ypoints = np.append(ypoints, y)
+		xpoints = np.append(xpoints, x)
+		ypoints = np.append(ypoints, y)
 
-		# for coord in xrange(0,len(xpoints)):
-		# 	if (x != xpoints[coord] or y != ypoints[coord]):
-		# 		cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-		
-		# if (index == 20):
-		# 	index = 0
-		# 	xpoints = np.array([[]], np.int32)
-		# 	ypoints = np.array([[]], np.int32)
+		for coord in xrange(0,len(xpoints)):
+			if (x != xpoints[coord] or y != ypoints[coord]):
+		 		if ((w*8)/5 <= h) or (cv2.contourArea(c) < 50):
+		                        cv2.rectangle(frame, (x, y), (x + w, y + h), (255,0, 0), 2)
+        		                #peopleCount += 1
+                		else:
+                	        	#carCount += 1
+                        		cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+
+		if (index == 20):
+		 	index = 0
+		 	xpoints = np.array([[]], np.int32)
+		 	ypoints = np.array([[]], np.int32)
 
 		roi_gray = gray[y:y+h, x:x+w]
 		roi_color = frame[y:y+h, x:x+w]
@@ -146,7 +152,7 @@ while True:
 	# Display people and car count
 	cv2.putText(frame, "People: {}".format(peopleCount), (250, 20),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,0, 0), 2)
-	cv2.putText(frame, "Cars: {}".format(carCount), (350, 20),
+	cv2.putText(frame, "Objects: {}".format(carCount), (350, 20),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
 
